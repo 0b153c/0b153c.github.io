@@ -14,7 +14,12 @@ permalink: /format
 
 What is being done in this step?
 
-* How is it done? (Step-by-step instructions in each bullet point.)  
+* How is it done?  
+* Step-by-step instructions
+   * in
+   * each
+   * bullet
+   * point  
 
 ``` markdown
 Commands run during the step (if applicable)
