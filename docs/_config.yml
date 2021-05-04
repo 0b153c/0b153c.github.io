@@ -18,14 +18,14 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: 0b153c's CTF / Security Blog
-email: N/A
+title: "0b153c's CTF / Security Blog"
+email: "N/A"
 description: >- # this means to ignore newlines until "baseurl:"
-  0b153c's Capture the Flag Write-Up / Security Blog
+  "0b153c's Capture the Flag Write-Up / Security Blog"
 baseurl: "/blog" # the subpath of your site, e.g. /blog
 url: "https://0b153c.github.io" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: 0b153c
-github_username:  0b153c
+twitter_username: "0b153c"
+github_username:  "0b153c"
 
 # Build settings
 theme: jekyll-theme-hacker
