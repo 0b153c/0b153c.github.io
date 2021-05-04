@@ -22,14 +22,13 @@ What is being done in this step?
    * point  
 
 ``` markdown
+
 Commands run during the step (if applicable)
 
 ```
 
----
 
-![Screenshot of result / output (if applicable)](https://i.ibb.co/Cz7JJVs/screenshot-example.png)
+> ![Screenshot of result / output (if applicable)](https://i.ibb.co/Cz7JJVs/screenshot-example.png)
 
----
 
 Why is it being done?
