@@ -22,7 +22,7 @@ compromise of the entire system.
 
 ## What is HTB?
 
-Short for “Hack The Box”, HTB is an online community dedicated to providing a safe and reliable
+Short for “[Hack The Box](https://www.hackthebox.eu/)”, HTB is an online community dedicated to providing a safe and reliable
 environment for individuals to enhance their offensive security skills using more contemporary CTFs that
 include real-world examples. The community adds in new challenges, while archiving older ones, every
 week. Points, rewarded for completing challenge objectives, are used to increase user rankings—therefore--
