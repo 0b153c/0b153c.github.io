@@ -6,7 +6,7 @@ permalink: /about
 
 # What is this blog about?
 
-A work in progress (like my life). The plan is to post **HTB** **CTF** write-ups and journal my Cyber-Security journey.  
+A work in progress. The plan is to post **HTB** **CTF** write-ups, journaling 0b153c's cyber-security journey.  
 
 ## What is a CTF?
 
