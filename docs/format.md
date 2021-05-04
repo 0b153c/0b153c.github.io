@@ -23,7 +23,7 @@ Commands run during the step (if applicable)
 
 ---
 
-Screenshot of result / output (if applicable)
+![Screenshot of result / output (if applicable)](screenshot-example.png)
 
 ---
 
