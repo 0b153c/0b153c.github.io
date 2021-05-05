@@ -24,13 +24,13 @@ Nmap (short for “Network Mapper”) is used to scan the target IP, identify al
 
 * On the attacker machine (within a terminal emulator), create a variable called “ports” and define it with the results of the nmap scan:
 
-``` bash
+```bash
 ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.215 | grep ^[0-9] | cut -d '/' -f 1 | tr '\n' ',' | sed s/,$//)
 ```
 
 * Once the scan completes, print the contents of the ports variable:
 
-``` bash
+```bash
 echo $ports
 ```
 
@@ -44,7 +44,7 @@ A second Nmap scan of the target IP is executed to uncover more information rega
 
 * Pass the “ports” variable into a follow-up nmap scan:
 
-``` bash
+```bash
 nmap -sC -sV -p$ports 10.10.10.215
 ```
 
@@ -63,10 +63,10 @@ Burp Suite (a suite of tools commonly used for web application security testing)
   * Select “Use Burp defaults” and click “Start Burp”
   * Select the “Proxy” tab, click the “Intercept is on” button to turn it off (not needed), and select the “Options” sub-tab
   * Under “Proxy Listeners”, “127.0.0.1:8080” should appear by default (this can be changed but is not necessary)
-* On the attacker machine (from a terminal emulator), install the chromium browser (if not already installed) and open it with the proxy settings identified in the previous point: 
+* On the attacker machine (from a terminal emulator), install the chromium browser (if not already installed) and open it with the proxy settings identified in the previous point:
 (Alternatively, the proxy settings of the preferred, or default, web browser may be modified; however, the benefit of the following method is only this instance of the web browser will use the Burp proxy.)
 
-``` bash
+```bash
 sudo apt install chromium 
 ```
 
@@ -80,15 +80,73 @@ By using the Burp Suite proxy listener, all web traffic requests made by the web
 
 Using the newly opened chromium web browser, attempt to browse to the target machine web server, via IP address.
 
-* Browse to <http://10.10.10.215> and receive an “Unknown host: academy.htb” error • Also, notice the address bar: browsing attempt redirected to “<http://academy.htb>”
+* Browse to <http://10.10.10.215> and receive an “Unknown host: academy.htb” error
+* Also, notice the address bar: browsing attempt redirected to “<http://academy.htb>”
 
 Attempting to browse to the target machine’s web server may have failed; however, the host-name of the target machine’s web server is now known. Knowing both the host-name and IP address means DNS can be bypassed.
 
 ### 1.3 – Local network routing modification / bypassing DNS
 
+#### 1.3.1
+
+Modify the local machine’s hosts file to include the target machine’s IP address and host-name combination.
+
+* Using “vi” CLI text editor (with elevated permissions), open the attacker machine’s “/etc/hosts” file:
+
+```bash
+sudo vi /etc/hosts
+```
+
+* Enter “Insert Mode” (\<i\>) and append the /etc/hosts file with the IP and host-name combination by adding the following text:
+
+```text
+10.10.10.215    academy.htb
+```
+
+> ![Screenshot_1.3.1](https://i.ibb.co/2SjsxLM/1-3-1.png)
+
+* Enter “Command Mode” (\<Esc\>) to then save the file and quit (by pressing \<Shift\> + \<Z\>, twice)
+
+Since the attacker machine does not have access to the same DNS server as the target machine, manually tying the host-name and IP address of the target machine together allows the attacker machine to bypass the need to query the remote DNS server. Browsing to <http://10.10.10.215> or <http://academy.htb> is now possible.
+
 ### 1.4 – Testing and analyzing site registration
 
+#### 1.4.1
+
+Create a new user account on the <http://academy.htb> site and analyze the associated web requests logged in Burp Suite.
+
+* Browse to <http://academy.htb/register.php> by clicking the “Register” link on the top right of the site
+* Enter in manually created credentials (for example, aca654:demy321) and click “Register”
+* In Burp Suite, under the “Proxy” tab, click the “HTTP History” sub-tab.
+* Select the entry matching the following criteria:
+  * Host: <http://academy.htb>
+  * Method: Post
+  * URL: /register.php
+  * Status: 302
+* Make note of the parameters passed within this HTTP POST Request:  
+uid=aca456&password=demy321&confirm=demy321&_**roleid=0**_
+
+> ![Screenshot_1.4.1](https://i.ibb.co/XYyRc55/1-4-1.png)
+
+Analysis of the registration web traffic uncovers a potential broken access control vulnerability (as it looks like new user roles are assigned as a parameter within the registration process).
+
 ### 1.5 – Discovering site directories and files
+
+#### 1.5.1
+
+Gobuster (a URI and DNS subdomain brute-forcing tool) is used to discover common sub-directories and web pages on the target web server.
+
+* On the attacker machine (from a terminal emulator), run the following command to brute-force for sub-directories, “txt”, or “php” files (on <http://academy.htb>) with the specified directory word-list:
+
+```bash
+gobuster dir -u http://academy.htb/ -w /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt -x txt,php -t 100
+```
+
+* Once gobuster is finished brute-forcing, review the results:
+
+> ![Screenshot.1.5.1](https://i.ibb.co/pbqPP05/1-5-1.png)
+
+Simply browsing around a website may not reveal all of the sub-directories and web pages on the given site. In this scenario, the discovery of the admin page (admin.php) is most useful.
 
 ## 2 – Intrusion
 
