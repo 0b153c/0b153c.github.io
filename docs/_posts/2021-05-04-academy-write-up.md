@@ -34,7 +34,7 @@ Nmap (short for “Network Mapper”) is used to scan the target IP, identify al
   echo $ports
   ```
 
-  > ![Screenshot_1.1.1](https://i.ibb.co/Ydw0Dgj/1-1-1.png)
+> ![Screenshot_1.1.1](https://i.ibb.co/Ydw0Dgj/1-1-1.png)
 
 Now that the open ports on the target machine have been discovered, additional network scanning may identify more details regarding what is running on the service ports.
 
@@ -48,7 +48,7 @@ A second Nmap scan of the target IP is executed to uncover more information rega
   nmap -sC -sV -p$ports 10.10.10.215
   ```
 
-  > ![Screenshot_1.1.2](https://i.ibb.co/fdx6WcR/1-1-2.png)
+> ![Screenshot_1.1.2](https://i.ibb.co/fdx6WcR/1-1-2.png)
 
 Knowing that the target machine is running OpenSSH Server, Apache Web Server, and--potentially--a MySQL Database Server helps with identifying what to focus on next. At this point, the “easiest” place to start would be the Apache Web Server (80/tcp/http).
 
@@ -103,7 +103,7 @@ Modify the local machine’s hosts file to include the target machine’s IP add
   10.10.10.215    academy.htb
   ```
 
-  > ![Screenshot_1.3.1](https://i.ibb.co/2SjsxLM/1-3-1.png)
+> ![Screenshot_1.3.1](https://i.ibb.co/2SjsxLM/1-3-1.png)
 
 * Enter “Command Mode” (\<Esc\>) to then save the file and quit (by pressing \<Shift\> + \<Z\>, twice)
 
@@ -126,7 +126,7 @@ Create a new user account on the <http://academy.htb> site and analyze the assoc
 * Make note of the parameters passed within this HTTP POST Request:  
 uid=aca456&password=demy321&confirm=demy321&_**roleid=0**_
 
-  > ![Screenshot_1.4.1](https://i.ibb.co/XYyRc55/1-4-1.png)
+> ![Screenshot_1.4.1](https://i.ibb.co/XYyRc55/1-4-1.png)
 
 Analysis of the registration web traffic uncovers a potential broken access control vulnerability (as it looks like new user roles are assigned as a parameter within the registration process).
 
@@ -144,7 +144,7 @@ Gobuster (a URI and DNS subdomain brute-forcing tool) is used to discover common
 
 * Once gobuster is finished brute-forcing, review the results:
 
-  > ![Screenshot.1.5.1](https://i.ibb.co/pbqPP05/1-5-1.png)
+> ![Screenshot.1.5.1](https://i.ibb.co/pbqPP05/1-5-1.png)
 
 Simply browsing around a website may not reveal all of the sub-directories and web pages on the given site. In this scenario, the discovery of the admin page (admin.php) is most useful.
 
@@ -194,7 +194,7 @@ _**“Fix issue with dev-staging-01.academy.htb pending”**_
   10.10.10.215    dev-staging-01.academy.htb
   ```
 
-  > ![Screenshot_2.2.1](https://i.ibb.co/mhhtDpF/2-2-1.png)
+> ![Screenshot_2.2.1](https://i.ibb.co/mhhtDpF/2-2-1.png)
 
 * Enter “Command Mode” (\<Esc\>) to then save the file and quit (by pressing \<Shift\> + \<Z\>, twice)
 
@@ -276,7 +276,7 @@ Using Metasploit Console (an interface to use the Metasploit Framework), in comb
   whoami
   ```
 
-  > ![Screenshot_3.1.1](https://i.ibb.co/c8dFFpy/3-1-1.png)
+> ![Screenshot_3.1.1](https://i.ibb.co/c8dFFpy/3-1-1.png)
 
 Having remote command execution on the target machine provides opportunities to uncover more sensitive data than analyzing the web sites. Additionally, having access as the service account that runs the website (www-data) means any private data secured behind server-side protections are now viewable (confidentiality), any existing information on the site can be modified (integrity), or the entire site could be moved/deleted/disabled (availability).
 
@@ -292,7 +292,7 @@ Upgrade the remote command execution shell for better interaction and to be able
   python3 -c "import pty;pty.spawn('/bin/bash')";
   ```
 
-  > ![Screenshot_3.2.1-1](https://i.ibb.co/JCg5Jn1/3-2-1-1.png)
+> ![Screenshot_3.2.1-1](https://i.ibb.co/JCg5Jn1/3-2-1-1.png)
 
 * In a new terminal, on the attacker machine, identify the terminal:
 
@@ -307,7 +307,7 @@ Upgrade the remote command execution shell for better interaction and to be able
   export TERM=<result of echo $TERM on attacker machine>
   ```
 
-  > ![Screenshot3.2.1-2](https://i.ibb.co/R2wdGyW/3-2-1-2.png)
+> ![Screenshot3.2.1-2](https://i.ibb.co/R2wdGyW/3-2-1-2.png)
 
 By default, the reverse-shell provided by proper execution of the exploit is just a “dummy” shell; however, using a few commands, the reverse-shell can be upgraded for ease of use and added functionality. (The most notable functionality now available is the switch user, or “su”, command--to be used later on.)
 
@@ -318,7 +318,8 @@ By default, the reverse-shell provided by proper execution of the exploit is jus
 List the contents of the “/home” directory on the target system.
 
 * `ls -la /home`
-  > ![Screenshot_3.3.1](https://i.ibb.co/tBV0N2G/3-3-1.png)
+
+> ![Screenshot_3.3.1](https://i.ibb.co/tBV0N2G/3-3-1.png)
 
 By listing the sub-directories under “/home”, a list of existing system users is revealed. If passwords are found, the switch user (su) command can be used to attempt to login as one of these users.
 
@@ -327,10 +328,15 @@ By listing the sub-directories under “/home”, a list of existing system user
 After some basic reconnaissance, discover a hidden environment file in the “/var/www/html/academy/” directory: printing and reviewing the contents.
 
 * `cd /var/www/html/academy`
+
 * `ls -la /var/www/html/academy/`
-  > ![Screenshot_3.3.2-1](https://i.ibb.co/3BTC0V3/3-3-2-1.png)
+
+> ![Screenshot_3.3.2-1](https://i.ibb.co/3BTC0V3/3-3-2-1.png)
+
 * `cat .env`
-  > ![Screenshot_3.3.2-2](https://i.ibb.co/n1tQsTt/3-3-2-2.png)
+
+> ![Screenshot_3.3.2-2](https://i.ibb.co/n1tQsTt/3-3-2-2.png)
+
 * Make note of the value for “DB_PASSWORD=”  
 _**mySup3rP4s5w0rd!!**_
 
@@ -342,13 +348,81 @@ Hidden environment files (.env) are known to contain sensitive data. While some 
 
 #### 4.1.1
 
+In attempting to use the newly discovered password (in 3.3.2) against the list of known usernames, the credentials work for logging in as one of the accounts!
+
+* Use the switch user command to login as the user “cry0l1t3” and adopt the user’s environment:
+
+  ```bash
+  su - cry0l1t3
+  ```
+
+* Enter the password discovered in 3.3.2:
+
+  ```bash
+  Password: mySup3rP4s5w0rd!!
+  ```
+
+* Confirm login success:
+
+  ```bash
+  whoami
+  ```
+
+> ![Screenshot_4.1.1](https://i.ibb.co/ss2JHGH/4-1-1.png)
+
+While having access as the web service account (www-data) had a few security implications, they were limited—only—to the the files and folders that the web service account had access to (usually limited). By switching to a different user account, more files and folders are available for further reconnaissance.
+
 ### 4.2 – Post lateral movement reconnaissance
 
 #### 4.2.1
 
+Print out the contents of the user.txt file to prove user “own”.
+
+* `cat user.txt`
+
+> ![Screenshot_4.2.1](https://i.ibb.co/Qbh34RP/4-2-1.png)
+
+_CTF objective one of two accomplished!_
+
 #### 4.2.2
 
+After some thorough reconnaissance, discover an audit log file containing an encoded password.
+
+* Change directory to the location of the audit log files:
+
+  ```bash
+  cd /var/log/audit
+  ```
+
+* List any log entries where the “su” command was used:
+
+  ```bash
+  grep 'comm="su"' audit.log audit.log.1 audit.log.2 audit.log.3
+  ```
+
+* Make note of the value for “data=”  
+_**6D7262336E5F41634064336D79210A**_
+
+> ![Screenshot_4.2.2](https://i.ibb.co/pR3Yy2Z/4-2-2.png)
+
+Audit logs--when readable--can be a goldmine of useful information. In this scenario, one of the audit log files had encoded data from a previous use of the switch user command. Properly decoding this data would mean having another password to try against the remaining user accounts.
+
 #### 4.2.3
+
+Decode the data discovered in the audit logs (in 4.2.2), using hURL (a lightweight command line interface tool used to encode/decode many formats). Upon further analysis of the data string, it appears to be hex encoding.
+
+* In a new terminal window on the attacker machine, decode the hex encoded string with the proper arguments in hURL:
+
+  ```bash
+  hURL -x 6D7262336E5F41634064336D79210A
+  ```
+
+* Make note of the results (it looks like the username is in the password):  
+_**mrb3n_Ac@d3my!**_
+
+> ![Screenshot_4.2.3](https://i.ibb.co/9yMSXXx/4-2-3.png)
+
+By decoding the data discovered in 4.2.2, yet another password is uncovered. In this case, the password may even include the username as the prefix of the password matches an existing user.
 
 ## 5 – Lateral Movement (2 of 2)
 
