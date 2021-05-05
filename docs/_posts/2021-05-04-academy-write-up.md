@@ -430,11 +430,59 @@ By decoding the data discovered in 4.2.2, yet another password is uncovered. In 
 
 #### 5.1.1
 
+In attempting to use the newly discovered password (in 4.2.3) against the assumed username, the credentials work for logging in!
+
+* Use the switch user command to login as the user “cry0l1t3” and adopt the user’s environment:
+
+  ```bash
+  su - mrb3n
+  ```
+
+* Enter the password decoded in 4.2.3:
+
+  ```bash
+  Password: mrb3n_Ac@d3my!
+  ```
+
+* Confirm login success:
+
+  ```bash
+  whoami
+  ```
+
+> ![Screenshot_5.1.1](https://i.ibb.co/Z6YGVbj/5-1-1.png)
+
+Each successful user login is another opportunity to uncover more sensitive data, security misconfigurations, or vulnerabilities on the system—eventually, leading to privilege escalation!
+
 ### 5.2 - Post lateral movement reconnaissance
 
 #### 5.2.1
 
+Enumerate what the current user has permissions to run, in an elevated mode.
+
+* List the commands that the user “mrb3n” is able to run with “sudo”:
+
+  ```bash
+  sudo -l
+  ```
+
+* `[sudo] password for mrb3n: mrb3n_Ac@d3my!`
+
+* Make note of the one command:  
+_**/usr/bin/composer**_
+
+> ![Screenshot_5.2.1](https://i.ibb.co/ZK8MS75/5-2-1.png)
+
+After identifying if, and what, the current user has permissions to run in an elevated fashion, additional research may uncover potential privilege escalation methods.
+
 #### 5.2.2
+
+Searching “composer” on <https://gtfobins.github.io> (a site dedicated to sharing how legitimate functions of certain tools can be abused for privilege escalation) results in finding detailed instructions on how to bypass the system security restrictions.
+
+* Review contents, under the “Sudo” heading, on the following page:  
+<https://gtfobins.github.io/gtfobins/composer/>
+
+Since the current user can run the “composer” tool in an elevated fashion, the steps outlined on the referenced gtfobins page may be used to gain elevated access to the system.
 
 ## 6 – Privilege Escalation
 
