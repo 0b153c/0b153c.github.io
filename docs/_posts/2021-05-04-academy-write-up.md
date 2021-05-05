@@ -18,6 +18,26 @@ The following two terms will be used throughout the write-up:
 
 ### 1.1 – Network scanning
 
+#### 1.1.1
+
+Nmap (short for “Network Mapper”) is used to scan the target IP, identify all open service ports, create a comma separated list of these service ports, and print out the list to confirm scan results.
+
+* On the attacker machine (within a terminal emulator), create a variable called “ports” and define it with the results of the nmap scan:
+
+``` bash
+ports=$(nmap -p- --min-rate=1000 -T4 10.10.10.215 | grep ^[0-9] | cut -d '/' -f 1 | tr '\n' ',' | sed s/,$//)
+```
+
+* Once the scan completes, print the contents of the ports variable:
+
+``` bash
+echo $ports
+```
+
+> ![Screenshot 1.1.1](https://i.ibb.co/Ydw0Dgj/1-1-1.png)
+
+Now that the open ports on the target machine have been discovered, additional network scanning may identify more details regarding what is running on the service ports.
+
 ### 1.2 – Setting up a local proxy and browsing to the web server
 
 ### 1.3 – Local network routing modification / bypassing DNS
