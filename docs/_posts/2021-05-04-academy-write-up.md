@@ -6,6 +6,14 @@ author: 0b153c
 categories: HTB CTFs
 ---
 
+## Terms
+
+The following two terms will be used throughout the write-up:
+
+* **Attacker machine**: local burner laptop, loaded with Kali Linux 2020.4, using an IP of 10.10.15.166
+
+* **Target machine**: remote server, Academy (hosted by HTB), using an IP of 10.10.10.215
+
 ## 1 - Reconnaissance
 
 ### 1.1 – Network scanning
