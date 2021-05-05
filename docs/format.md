@@ -4,6 +4,8 @@ title: "CTF Write-Up Format"
 permalink: /format
 ---
 
+# Format of the CTF Write-Ups
+
 ## \# - Section title
 
 ### \#.# - Sub-section title
