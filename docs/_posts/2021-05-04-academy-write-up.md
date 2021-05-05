@@ -50,7 +50,7 @@ nmap -sC -sV -p$ports 10.10.10.215
 
 > ![Screenshot_1.1.2](https://i.ibb.co/fdx6WcR/1-1-2.png)
 
-Knowing that the target machine is running OpenSSH Server, Apache Web Server, and—potentially—a MySQL Database Server helps with identifying what to focus on next. At this point, the “easiest” place to start would be the Apache Web Server (80/tcp/http).
+Knowing that the target machine is running OpenSSH Server, Apache Web Server, and--potentially--a MySQL Database Server helps with identifying what to focus on next. At this point, the “easiest” place to start would be the Apache Web Server (80/tcp/http).
 
 ### 1.2 – Setting up a local proxy and browsing to the web server
 
@@ -152,7 +152,66 @@ Simply browsing around a website may not reveal all of the sub-directories and w
 
 ### 2.1 – Manipulating site registration
 
+#### 2.1.1
+
+Using Burp Suite, modify and repeat the registration process with new credentials and an elevated role.
+
+* In Burp Suite, right click on the entry identified in 1.4.1 and click “Send to Repeater”
+* Click the “Repeater” tab
+* Modify all the parameters in the HTTP POST Request, ensuring to set “roleid” to “1”  
+(for example, “uid=aca321&password=demy456&confirm=demy456&roleid=1”)
+* Click “Send” (on the top left of the window)
+  * The response results in a 302 and loads success-page.php, meaning account creation is successful!
+
+By repeating the web traffic with modified parameters, a new account is created with a higher role than intended by default.
+
+#### 2.1.2
+
+Confirm successful--elevated role--registration by logging in to the admin page with the new credentials.
+
+* Browse to <http://academy.htb/admin.php>
+* Enter credentials created in 2.1.1 and click “Login”
+
+By successfully logging into the admin page (with a newly created account), it may be possible to uncover information that should only be accessible to privileged users.
+
 ### 2.2 – Post intrusion reconnaissance
+
+#### 2.2.1
+
+Reviewing contents of the admin page, the last item reveals the existence of a development/staging site host-name with pending issues. Appending the attacker machine’s hosts file (similar to 1.3.1) to include the target machine’s IP address and—newly discovered—host-name combination, allows for accessing the development/staging site.
+
+* On the <http://academy.htb/admin-page.php>, focus on the last line:  
+_**“Fix issue with dev-staging-01.academy.htb pending”**_
+* Using “vi” CLI text editor (with elevated permissions), open the attacker machine’s “/etc/hosts” file:
+
+```bash
+sudo vi /etc/hosts
+```
+
+* Enter “Insert Mode” (\<i\>) and append the /etc/hosts file with the IP and host-name combination by adding the following text:
+
+```text
+10.10.10.215    dev-staging-01.academy.htb
+```
+
+> ![Screenshot_2.2.1](https://i.ibb.co/mhhtDpF/2-2-1.png)
+
+* Enter “Command Mode” (\<Esc\>) to then save the file and quit (by pressing \<Shift\> + \<Z\>, twice)
+
+It is common for a single server to host more than one website by use of virtual directories and sub- domains. Since the attacker machine does not have access to the same DNS server as the target machine, manually tying the host-name and IP address of the target machine together allows the attacker machine to bypass the need to query the remote DNS server. Browsing to <http://dev-staging-01.academy.htb/> is now possible.
+
+#### 2.2.2
+
+The phrase “fix issue with” hints to the fact that there may be additional information available when accessing the development/staging site. Taking note of some key data found on the development/staging site could be beneficial in researching for a potential exploit.
+
+* Browse to <http://dev-staging-01.academy.htb/>
+* Review the data in the “Environment & data” section
+* Focus on the entries with the “APP_” prefix  
+![Screenshot_2.2.2](https://i.ibb.co/d4L9B70/2-2-2.png)
+* Search Exploit-DB (<https://www.exploit-db.com/>) for any known vulnerabilities with Laravel (APP_NAME)
+* Focus on “PHP Laravel Framework 5.5.40 / 5.6.x < 5.6.30 - token Unserialize Remote Command Execution (Metasploit)” as “[a]uthentication is not required, however exploitation requires knowledge of the Laravel APP_KEY” (<https://www.exploit-db.com/exploits/47129>)
+
+By reviewing the information on the development/staging site, enough information can be gathered to research and find an existing exploit to try.
 
 ## 3 – Exploitation
 
