@@ -528,10 +528,6 @@ Print out the contents of the root.txt file to prove system “own”.
 
 _**CTF objective two of two accomplished!**_
 
-## 7 - CWE References and Recommendations
-
-(Coming Soon...)
-
 ---
 
 GG!
